@@ -1,3 +1,6 @@
+* Este é um projeto para a seleção de estágio da App Masters.
+Para conhecer mais sobre a empresa, acesse: https://www.appmasters.io/
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started

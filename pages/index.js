@@ -1,9 +1,12 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import App from "./api/app"
 
 export default function Home() {
   return (
-    <h1><h1>Doação de computadores usados</h1></h1>
+    <div>
+      <h1>Doação de computadores usados</h1>
+      <App />
+    </div>
+    // <App />
   )
 }
+
