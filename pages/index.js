@@ -6,7 +6,6 @@ export default function Home() {
       <h1>Doação de computadores usados</h1>
       <App />
     </div>
-    // <App />
   )
 }
 
