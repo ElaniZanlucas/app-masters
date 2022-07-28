@@ -61,6 +61,7 @@ export default function App() {
     const cep = address.replace(/\D/g, '');
     console.log(cep)
     console.log("blablibla")
+    console.log("press F to respect")
 
     let url = `https://viacep.com.br/ws/${cep}/json/`
     const response = await fetch(url)
