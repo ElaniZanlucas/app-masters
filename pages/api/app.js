@@ -1,89 +1,92 @@
 // import React, { useEffect, useState } from 'react'
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import { useFormik, useFormikContext } from 'formik'
+import { Formik, Form, Field, useFormikContext } from 'formik'
 import * as yup from "yup"
 // import api from '../services/api'
 // import "../../styles/styles.css"
 
-export default function App() {
-// const formulario = () => {
-  // const {register, handleSubmit, setValue, setFocus} = useForm();
-  // const {setFocus} = useForm();
-  const formik = useFormik({
-    initialValues: {
-      name:"",
-      email:"",
-      phone:"",
-      zip:"",
-      city:"",
-      state:"",
-      streetAddress:"",
-      number:"",
-      complement:"",
-      neighborhood:"",
-      deviceCount:"",
-      // devices: [
-      //   {
-      //     type:"",
-      //     condition:""
-      //   }
-      // ]
-    },
-    validationSchema: yup.object({
-      name: yup.string().required("Este campo é obrigatório"),
-      email: yup.string().email(),
-      phone: yup.number().required("Este campo é obrigatório"),
-      zip: yup.string().required("Este campo é obrigatório"),
-      city:yup.string().required("Este campo é obrigatório"),
-      state:yup.string().required("Este campo é obrigatório"),
-      streetAddress:yup.string().required("Este campo é obrigatório"),
-      number:yup.number().positive().integer().required("Este campo é obrigatório"),
-      complement:yup.string(),
-      neighborhood:yup.string().required("Este campo é obrigatório"),
-      deviceCount:yup.number().required("Este campo é obrigatório"),
-      // devices: yup.array().of(yup.object({
-      //   type:yup.string().required("Este campo é obrigatório"),
-      //   condition:yup.string().required("Este campo é obrigatório")
-      // }))
-      // [
-      //   {
-      //     type:"",
-      //     condition:""
-      //   }
-      // ]
-    }),
-    onSubmit: (data) => console.log(data),
-  });
+const validationSchema = yup.object().shape({
+  name: yup.string().required("Este campo é obrigatório"),
+  email: yup.string().email("Este email é inválido"),
+  phone: yup.number().required("Este campo é obrigatório"),
+  zip: yup.string().required("Este campo é obrigatório"),
+  city:yup.string().required("Este campo é obrigatório"),
+  state:yup.string().required("Este campo é obrigatório"),
+  streetAddress:yup.string().required("Este campo é obrigatório"),
+  number:yup.number().positive().integer().required("Este campo é obrigatório"),
+  complement:yup.string(),
+  neighborhood:yup.string().required("Este campo é obrigatório"),
+  deviceCount:yup.number().required("Este campo é obrigatório"),
+  // devices: yup.array().of(yup.object({
+  //   type:yup.string().required("Este campo é obrigatório"),
+  //   condition:yup.string().required("Este campo é obrigatório")
+  // }))
+  // [
+  //   {
+  //     type:"",
+  //     condition:""
+  //   }
+  // ]
+});
 
-  const {setFieldValue} = useFormikContext();
-  async function insertAddress (address) {
-    const cep = address.replace(/\D/g, '');
-    console.log(cep)
-    console.log("blablibla")
-    console.log("press F to respect")
+const initialValues={
+  name:"",
+  email:"",
+  phone:"",
+  zip:"",
+  city:"",
+  state:"",
+  streetAddress:"",
+  number:"",
+  complement:"",
+  neighborhood:"",
+  deviceCount:"",
+  // devices: [
+  //   {
+  //     type:"",
+  //     condition:""
+  //   }
+  // ]
+};
 
-    let url = `https://viacep.com.br/ws/${cep}/json/`
-    const response = await fetch(url)
-    const {bairro, complemento, localidade, logradouro, uf} = await response.json()
+// const {values, submitForm} = useFormikContext();
 
-    console.log(bairro, complemento, localidade, logradouro, uf)
+async function insertAddress (address) {
+  const cep = address.replace(/\D/g, '');
+  console.log(cep)
+  console.log("blablibla")
+  console.log("press F to respect")
 
-    setFieldValue("neighborhood", "blabla")
+  let url = `https://viacep.com.br/ws/${cep}/json/`
+  const response = await fetch(url)
+  const {bairro, complemento, localidade, logradouro, uf} = await response.json()
+
+  console.log(bairro, complemento, localidade, logradouro, uf)
+
+  setFieldValue("neighborhood", "blabla")
+
+}
+
+const formulario = () => {
+
+
+  <Formik
+    initialValues={initialValues}
+    validationSchema={validationSchema}
+    onSubmit={async (data) => {
+      console.log(JSON.stringify(data, null, 2))
+    }}
+    // onSubmit= {(data) => {console.log(data)}}
+  >
   
-  }
-
-  return (
-    <form onSubmit={formik.handleSubmit} method="POST">
+    <form>
       <label htmlFor="name">
         Nome:
         <input 
           id="name" 
           name="name"
           type="text"
-          onChange={formik.handleChange} 
-          onBlur={formik.handleBlur} 
-          value={formik.values.name} 
         />
       </label>
 
@@ -92,10 +95,7 @@ export default function App() {
         <input 
           id="email" 
           name="email"
-          type="email"
-          onChange={formik.handleChange} 
-          onBlur={formik.handleBlur} 
-          value={formik.values.email} 
+          type="email" 
         />
       </label>
 
@@ -105,9 +105,6 @@ export default function App() {
           id="phone" 
           name="phone"
           type="tel"
-          onChange={formik.handleChange} 
-          onBlur={formik.handleBlur} 
-          value={formik.values.phone} 
         />
       </label>
 
@@ -117,9 +114,9 @@ export default function App() {
           id="zip" 
           name="zip"
           type="text"
-          onChange={formik.handleChange} 
-          onBlur={insertAddress(formik.values.zip)} 
-          value={formik.values.zip} 
+          placeholder="CEP"
+          value={values.zip}
+          onBlur={insertAddress(values.zip)} 
         />
       </label>
 
@@ -129,9 +126,6 @@ export default function App() {
           id="city" 
           name="city"
           type="text"
-          onChange={formik.handleChange} 
-          onBlur={formik.handleBlur} 
-          value={formik.values.city} 
         />
       </label>
 
@@ -141,9 +135,6 @@ export default function App() {
           id="state" 
           name="state"
           type="text"
-          onChange={formik.handleChange} 
-          onBlur={formik.handleBlur} 
-          value={formik.values.state} 
         />
       </label>
 
@@ -152,10 +143,7 @@ export default function App() {
         <input 
           id="streetAddress" 
           name="streetAddress"
-          type="text"
-          onChange={formik.handleChange} 
-          onBlur={formik.handleBlur} 
-          value={formik.values.streetAddress} 
+          type="text" 
         />
       </label>
 
@@ -165,9 +153,6 @@ export default function App() {
           id="number" 
           name="number"
           type="number"
-          onChange={formik.handleChange} 
-          onBlur={formik.handleBlur} 
-          value={formik.values.number} 
         />
       </label>
 
@@ -176,10 +161,7 @@ export default function App() {
         <input 
           id="complement" 
           name="complement"
-          type="text"
-          onChange={formik.handleChange} 
-          onBlur={formik.handleBlur} 
-          value={formik.values.complement} 
+          type="text" 
         />
       </label>
 
@@ -188,10 +170,7 @@ export default function App() {
         <input 
           id="neighborhood" 
           name="neighborhood"
-          type="text"
-          onChange={formik.handleChange} 
-          onBlur={formik.handleBlur} 
-          value={formik.values.neighborhood} 
+          type="text" 
         />
       </label>
 
@@ -201,18 +180,20 @@ export default function App() {
           id="deviceCount" 
           name="deviceCount"
           type="number"
-          onChange={formik.handleChange} 
-          onBlur={formik.handleBlur} 
-          // onBlur={formik.insertDevices(formik.values.deviceCount)} 
-          value={formik.values.deviceCount} 
+          // onBlur={formik.handleBlur} 
+          // onBlur={insertDevices(formik.values.deviceCount)} 
         />
       </label>
 
       <button type="submit">Enviar</button>
     </form>
-  )
-// }
+  </Formik>
 
+}
+export default function App() {
+  // const {register, handleSubmit, setValue, setFocus} = useForm();
+  // const {setFocus} = useForm();
+  
 
   // const [alive, setAlive] = useState([]);
   // const {register, handleSubmit} = useForm();
@@ -230,8 +211,9 @@ export default function App() {
   // const handleRegistration = (data) => console.log(data)
   // const handleError = (error) => console.error(error)
   
-  // return (
-  //   return <formulario />;
-  //   console.log("tá tudo certo, confia")
-  // )
+  return (
+    <formulario />
+    // formulario()
+    // console.log("tá tudo certo, confia")
+  )
 }
